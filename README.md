@@ -89,39 +89,3 @@ sistemos sudedamosios dalys ir technologijos:
 5. Mokėjimai – nežinau bus sugalvota darymo metu
 
 6. Diegimas – Linux serveris, Docker konteineriai
-
-2.1 pav. pateikta sistemos diegimo diagrama. Sistema patalpinta „Microsoft Azure“ virtualioje mašinoje su Ubuntu 24.04 LTS operacine sistema, „Belgium Central“ regione. Atskiruose Docker konteineriuose veikia Caddy, Python su FastAPI ir PostgreSQL duomenų bazė. Caddy aptarnauja React aplikacijos failus, persiunčia API užklausas ir automatiškai valdo HTTPS sertifikatą. Duomenų bazė pasiekiama tik vidiniame Docker tinkle.
-
-quarries
-{
-  "name": "Gynimo karjeras",
-  "city": "Kaunas",
-  "address": "Pavyzdžio g. 10, Kauno r.",
-  "phone": "+37060000111",
-  "description": "Smėlio ir žvyro karjeras.",
-  "latitude": 54.9,
-  "longitude": 23.9
-}
-
-offers
-{
-  "name": "Sijotas smėlis",
-  "materialType": "sand",
-  "fraction": "0-2 mm",
-  "description": "Smulkus smėlis statybos darbams.",
-  "pricePerTonneEur": 15,
-  "available": true
-}
-
-orders
-{
-  "customerName": "Jonas Pavyzdys",
-  "email": "jonas@example.com",
-  "phone": "+37060000333",
-  "deliveryAddress": "Pavyzdžio g. 25, Kaunas",
-  "quantityTonnes": 2,
-  "willBeHome": false,
-  "unloadingInstructions": "Išpilti prie vartų ant tento.",
-  "paymentMethod": "cash",
-  "status": "pending"
-}
