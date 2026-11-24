@@ -2,10 +2,7 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
-.tools/
 Ataskaita/
-.codex/
-.agents/
 .env
 .env.*
 !.env.example
@@ -14,16 +11,10 @@ Ataskaita/
 *.key
 *.pfx
 *.p12
-*.db
-*.sqlite
-*.sqlite3
 *.log
-coverage/
-.data/
 ~$*.docx
 frontend/node_modules/
 frontend/dist/
 frontend/test-results/
 frontend/playwright-report/
-.env.production
 *.tsbuildinfo
