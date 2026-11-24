@@ -1,9 +1,5 @@
 # Projekto „Noriuzvyro“ ataskaita
 
-Svetainė: https://noriuzvyro.belgiumcentral.cloudapp.azure.com/
-
-API dokumentacija: https://noriuzvyro.belgiumcentral.cloudapp.azure.com/docs
-
 ## 1. Sprendžiamo uždavinio aprašymas
 
 ### 1.1. Sistemos paskirtis
