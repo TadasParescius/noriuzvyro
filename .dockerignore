@@ -3,6 +3,5 @@
 .env.*
 .git
 frontend
-Ataskaita
 tests
 **/__pycache__
