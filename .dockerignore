@@ -1,0 +1,8 @@
+.venv
+.env
+.env.*
+.git
+frontend
+Ataskaita
+tests
+**/__pycache__

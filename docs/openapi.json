@@ -1,0 +1,4694 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Noriuzvyro API",
+    "description": "Ataskaitai papildyta FastAPI OpenAPI specifikacija su JSON užklausų ir galimų atsakymų pavyzdžiais. Pavyzdžių ID ir kontaktai yra demonstraciniai.",
+    "version": "2.0.0"
+  },
+  "paths": {
+    "/api": {
+      "get": {
+        "summary": "Api Root",
+        "operationId": "api_root_api_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "name": "Noriuzvyro Lab1 API",
+                  "version": "2.0.0",
+                  "_links": {
+                    "quarries": {
+                      "href": "/api/quarries",
+                      "method": "GET"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quarries": {
+      "get": {
+        "summary": "List Quarries",
+        "operationId": "list_quarries_api_quarries_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "name": "Kauno žvyro karjeras",
+                      "city": "Kaunas",
+                      "address": "Pavyzdžio g. 10, Kauno r.",
+                      "phone": "+37060000111",
+                      "description": "Žvyras ir smėlis aplinkos tvarkymui.",
+                      "latitude": 54.9,
+                      "longitude": 23.9,
+                      "id": 1,
+                      "ownerId": 3,
+                      "createdAt": "2026-10-10T10:00:00Z",
+                      "updatedAt": "2026-10-10T10:00:00Z",
+                      "_links": {
+                        "self": {
+                          "href": "/api/quarries/1",
+                          "method": "GET"
+                        },
+                        "update": {
+                          "href": "/api/quarries/1",
+                          "method": "PUT"
+                        },
+                        "delete": {
+                          "href": "/api/quarries/1",
+                          "method": "DELETE"
+                        }
+                      }
+                    }
+                  ],
+                  "meta": {
+                    "total": 1,
+                    "page": 1,
+                    "pageSize": 10,
+                    "totalPages": 1
+                  },
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries?page=1&pageSize=10",
+                      "method": "GET"
+                    },
+                    "next": null,
+                    "previous": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Quarry",
+        "operationId": "create_quarry_api_quarries_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuarryBody"
+              },
+              "examples": {
+                "pavyzdys": {
+                  "summary": "Galiojanti užklausa",
+                  "value": {
+                    "name": "Kauno žvyro karjeras",
+                    "city": "Kaunas",
+                    "address": "Pavyzdžio g. 10, Kauno r.",
+                    "phone": "+37060000111",
+                    "description": "Žvyras ir smėlis aplinkos tvarkymui.",
+                    "latitude": 54.9,
+                    "longitude": 23.9
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "name": "Kauno žvyro karjeras",
+                  "city": "Kaunas",
+                  "address": "Pavyzdžio g. 10, Kauno r.",
+                  "phone": "+37060000111",
+                  "description": "Žvyras ir smėlis aplinkos tvarkymui.",
+                  "latitude": 54.9,
+                  "longitude": 23.9,
+                  "id": 1,
+                  "ownerId": 3,
+                  "createdAt": "2026-10-10T10:00:00Z",
+                  "updatedAt": "2026-10-10T10:00:00Z",
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1",
+                      "method": "GET"
+                    },
+                    "update": {
+                      "href": "/api/quarries/1",
+                      "method": "PUT"
+                    },
+                    "delete": {
+                      "href": "/api/quarries/1",
+                      "method": "DELETE"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "description": "Sukurto resurso kelias",
+                "schema": {
+                  "type": "string"
+                },
+                "example": "/api/quarries/1"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/quarries/{quarry_id}": {
+      "get": {
+        "summary": "Read Quarry",
+        "operationId": "read_quarry_api_quarries__quarry_id__get",
+        "parameters": [
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "name": "Kauno žvyro karjeras",
+                  "city": "Kaunas",
+                  "address": "Pavyzdžio g. 10, Kauno r.",
+                  "phone": "+37060000111",
+                  "description": "Žvyras ir smėlis aplinkos tvarkymui.",
+                  "latitude": 54.9,
+                  "longitude": 23.9,
+                  "id": 1,
+                  "ownerId": 3,
+                  "createdAt": "2026-10-10T10:00:00Z",
+                  "updatedAt": "2026-10-10T10:00:00Z",
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1",
+                      "method": "GET"
+                    },
+                    "update": {
+                      "href": "/api/quarries/1",
+                      "method": "PUT"
+                    },
+                    "delete": {
+                      "href": "/api/quarries/1",
+                      "method": "DELETE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Quarry",
+        "operationId": "update_quarry_api_quarries__quarry_id__put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuarryBody"
+              },
+              "examples": {
+                "pavyzdys": {
+                  "summary": "Galiojanti užklausa",
+                  "value": {
+                    "name": "Kauno žvyro karjeras",
+                    "city": "Kaunas",
+                    "address": "Pavyzdžio g. 10, Kauno r.",
+                    "phone": "+37060000111",
+                    "description": "Žvyras ir smėlis aplinkos tvarkymui.",
+                    "latitude": 54.9,
+                    "longitude": 23.9
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "name": "Kauno žvyro karjeras",
+                  "city": "Kaunas",
+                  "address": "Pavyzdžio g. 10, Kauno r.",
+                  "phone": "+37060000111",
+                  "description": "Žvyras ir smėlis aplinkos tvarkymui.",
+                  "latitude": 54.9,
+                  "longitude": 23.9,
+                  "id": 1,
+                  "ownerId": 3,
+                  "createdAt": "2026-10-10T10:00:00Z",
+                  "updatedAt": "2026-10-10T10:00:00Z",
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1",
+                      "method": "GET"
+                    },
+                    "update": {
+                      "href": "/api/quarries/1",
+                      "method": "PUT"
+                    },
+                    "delete": {
+                      "href": "/api/quarries/1",
+                      "method": "DELETE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Patch Quarry",
+        "operationId": "patch_quarry_api_quarries__quarry_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuarryPatchBody"
+              },
+              "examples": {
+                "pavyzdys": {
+                  "summary": "Galiojanti užklausa",
+                  "value": {
+                    "name": "Atnaujintas karjero pavadinimas"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "name": "Kauno žvyro karjeras",
+                  "city": "Kaunas",
+                  "address": "Pavyzdžio g. 10, Kauno r.",
+                  "phone": "+37060000111",
+                  "description": "Žvyras ir smėlis aplinkos tvarkymui.",
+                  "latitude": 54.9,
+                  "longitude": 23.9,
+                  "id": 1,
+                  "ownerId": 3,
+                  "createdAt": "2026-10-10T10:00:00Z",
+                  "updatedAt": "2026-10-10T10:00:00Z",
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1",
+                      "method": "GET"
+                    },
+                    "update": {
+                      "href": "/api/quarries/1",
+                      "method": "PUT"
+                    },
+                    "delete": {
+                      "href": "/api/quarries/1",
+                      "method": "DELETE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Quarry",
+        "operationId": "delete_quarry_api_quarries__quarry_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quarries/{quarry_id}/summary": {
+      "get": {
+        "summary": "Quarry Summary",
+        "operationId": "quarry_summary_api_quarries__quarry_id__summary_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "quarry": {
+                    "name": "Kauno žvyro karjeras",
+                    "city": "Kaunas",
+                    "address": "Pavyzdžio g. 10, Kauno r.",
+                    "phone": "+37060000111",
+                    "description": "Žvyras ir smėlis aplinkos tvarkymui.",
+                    "latitude": 54.9,
+                    "longitude": 23.9,
+                    "id": 1,
+                    "ownerId": 3,
+                    "createdAt": "2026-10-10T10:00:00Z",
+                    "updatedAt": "2026-10-10T10:00:00Z",
+                    "_links": {
+                      "self": {
+                        "href": "/api/quarries/1",
+                        "method": "GET"
+                      },
+                      "update": {
+                        "href": "/api/quarries/1",
+                        "method": "PUT"
+                      },
+                      "delete": {
+                        "href": "/api/quarries/1",
+                        "method": "DELETE"
+                      }
+                    }
+                  },
+                  "statistics": {
+                    "offerCount": 1,
+                    "availableOfferCount": 1,
+                    "orderCount": 1,
+                    "pendingOrderCount": 1,
+                    "activeMaterialTotalEur": 31.0
+                  },
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1/summary",
+                      "method": "GET"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quarries/{quarry_id}/offers": {
+      "get": {
+        "summary": "List Offers",
+        "operationId": "list_offers_api_quarries__quarry_id__offers_get",
+        "parameters": [
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "name": "Plautas smėlis",
+                      "materialType": "sand",
+                      "fraction": "0-2 mm",
+                      "description": "Smėlis aplinkos tvarkymo darbams.",
+                      "pricePerTonneEur": 15.5,
+                      "available": true,
+                      "id": 1,
+                      "quarryId": 1,
+                      "createdAt": "2026-10-10T10:00:00Z",
+                      "updatedAt": "2026-10-10T10:00:00Z",
+                      "_links": {
+                        "self": {
+                          "href": "/api/quarries/1/offers/1",
+                          "method": "GET"
+                        },
+                        "update": {
+                          "href": "/api/quarries/1/offers/1",
+                          "method": "PUT"
+                        },
+                        "delete": {
+                          "href": "/api/quarries/1/offers/1",
+                          "method": "DELETE"
+                        }
+                      }
+                    }
+                  ],
+                  "meta": {
+                    "total": 1,
+                    "page": 1,
+                    "pageSize": 10,
+                    "totalPages": 1
+                  },
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1/offers?page=1&pageSize=10",
+                      "method": "GET"
+                    },
+                    "next": null,
+                    "previous": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Offer",
+        "operationId": "create_offer_api_quarries__quarry_id__offers_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferBody"
+              },
+              "examples": {
+                "pavyzdys": {
+                  "summary": "Galiojanti užklausa",
+                  "value": {
+                    "name": "Plautas smėlis",
+                    "materialType": "sand",
+                    "fraction": "0-2 mm",
+                    "description": "Smėlis aplinkos tvarkymo darbams.",
+                    "pricePerTonneEur": 15.5,
+                    "available": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "name": "Plautas smėlis",
+                  "materialType": "sand",
+                  "fraction": "0-2 mm",
+                  "description": "Smėlis aplinkos tvarkymo darbams.",
+                  "pricePerTonneEur": 15.5,
+                  "available": true,
+                  "id": 1,
+                  "quarryId": 1,
+                  "createdAt": "2026-10-10T10:00:00Z",
+                  "updatedAt": "2026-10-10T10:00:00Z",
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1/offers/1",
+                      "method": "GET"
+                    },
+                    "update": {
+                      "href": "/api/quarries/1/offers/1",
+                      "method": "PUT"
+                    },
+                    "delete": {
+                      "href": "/api/quarries/1/offers/1",
+                      "method": "DELETE"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "description": "Sukurto resurso kelias",
+                "schema": {
+                  "type": "string"
+                },
+                "example": "/api/quarries/1/offers/1"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quarries/{quarry_id}/offers/{offer_id}": {
+      "get": {
+        "summary": "Read Offer",
+        "operationId": "read_offer_api_quarries__quarry_id__offers__offer_id__get",
+        "parameters": [
+          {
+            "name": "offer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Offer Id"
+            }
+          },
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "name": "Plautas smėlis",
+                  "materialType": "sand",
+                  "fraction": "0-2 mm",
+                  "description": "Smėlis aplinkos tvarkymo darbams.",
+                  "pricePerTonneEur": 15.5,
+                  "available": true,
+                  "id": 1,
+                  "quarryId": 1,
+                  "createdAt": "2026-10-10T10:00:00Z",
+                  "updatedAt": "2026-10-10T10:00:00Z",
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1/offers/1",
+                      "method": "GET"
+                    },
+                    "update": {
+                      "href": "/api/quarries/1/offers/1",
+                      "method": "PUT"
+                    },
+                    "delete": {
+                      "href": "/api/quarries/1/offers/1",
+                      "method": "DELETE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Offer",
+        "operationId": "update_offer_api_quarries__quarry_id__offers__offer_id__put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "offer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Offer Id"
+            }
+          },
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferBody"
+              },
+              "examples": {
+                "pavyzdys": {
+                  "summary": "Galiojanti užklausa",
+                  "value": {
+                    "name": "Plautas smėlis",
+                    "materialType": "sand",
+                    "fraction": "0-2 mm",
+                    "description": "Smėlis aplinkos tvarkymo darbams.",
+                    "pricePerTonneEur": 15.5,
+                    "available": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "name": "Plautas smėlis",
+                  "materialType": "sand",
+                  "fraction": "0-2 mm",
+                  "description": "Smėlis aplinkos tvarkymo darbams.",
+                  "pricePerTonneEur": 15.5,
+                  "available": true,
+                  "id": 1,
+                  "quarryId": 1,
+                  "createdAt": "2026-10-10T10:00:00Z",
+                  "updatedAt": "2026-10-10T10:00:00Z",
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1/offers/1",
+                      "method": "GET"
+                    },
+                    "update": {
+                      "href": "/api/quarries/1/offers/1",
+                      "method": "PUT"
+                    },
+                    "delete": {
+                      "href": "/api/quarries/1/offers/1",
+                      "method": "DELETE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Offer",
+        "operationId": "delete_offer_api_quarries__quarry_id__offers__offer_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "offer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Offer Id"
+            }
+          },
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quarries/{quarry_id}/offers/{offer_id}/orders": {
+      "get": {
+        "summary": "List Orders",
+        "operationId": "list_orders_api_quarries__quarry_id__offers__offer_id__orders_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "offer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Offer Id"
+            }
+          },
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "customerName": "Jonas Jonaitis",
+                      "email": "jonas@example.com",
+                      "phone": "+37060000222",
+                      "deliveryAddress": "Pavyzdžio g. 15, Kaunas",
+                      "quantityTonnes": 2,
+                      "willBeHome": false,
+                      "unloadingInstructions": "Išpilti prie vartų dešinėje.",
+                      "paymentMethod": "cash",
+                      "status": "pending",
+                      "id": 1,
+                      "offerId": 1,
+                      "ownerId": 2,
+                      "driverId": null,
+                      "unitPriceEur": 15.5,
+                      "materialTotalEur": 31.0,
+                      "createdAt": "2026-10-10T10:00:00Z",
+                      "updatedAt": "2026-10-10T10:00:00Z",
+                      "_links": {
+                        "self": {
+                          "href": "/api/quarries/1/offers/1/orders/1",
+                          "method": "GET"
+                        },
+                        "update": {
+                          "href": "/api/quarries/1/offers/1/orders/1",
+                          "method": "PUT"
+                        },
+                        "delete": {
+                          "href": "/api/quarries/1/offers/1/orders/1",
+                          "method": "DELETE"
+                        }
+                      }
+                    }
+                  ],
+                  "meta": {
+                    "total": 1,
+                    "page": 1,
+                    "pageSize": 10,
+                    "totalPages": 1
+                  },
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1/offers/1/orders?page=1&pageSize=10",
+                      "method": "GET"
+                    },
+                    "next": null,
+                    "previous": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Order",
+        "operationId": "create_order_api_quarries__quarry_id__offers__offer_id__orders_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "offer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Offer Id"
+            }
+          },
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderBody"
+              },
+              "examples": {
+                "pavyzdys": {
+                  "summary": "Galiojanti užklausa",
+                  "value": {
+                    "customerName": "Jonas Jonaitis",
+                    "email": "jonas@example.com",
+                    "phone": "+37060000222",
+                    "deliveryAddress": "Pavyzdžio g. 15, Kaunas",
+                    "quantityTonnes": 2,
+                    "willBeHome": false,
+                    "unloadingInstructions": "Išpilti prie vartų dešinėje.",
+                    "paymentMethod": "cash",
+                    "status": "pending"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "customerName": "Jonas Jonaitis",
+                  "email": "jonas@example.com",
+                  "phone": "+37060000222",
+                  "deliveryAddress": "Pavyzdžio g. 15, Kaunas",
+                  "quantityTonnes": 2,
+                  "willBeHome": false,
+                  "unloadingInstructions": "Išpilti prie vartų dešinėje.",
+                  "paymentMethod": "cash",
+                  "status": "pending",
+                  "id": 1,
+                  "offerId": 1,
+                  "ownerId": 2,
+                  "driverId": null,
+                  "unitPriceEur": 15.5,
+                  "materialTotalEur": 31.0,
+                  "createdAt": "2026-10-10T10:00:00Z",
+                  "updatedAt": "2026-10-10T10:00:00Z",
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "GET"
+                    },
+                    "update": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "PUT"
+                    },
+                    "delete": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "DELETE"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "description": "Sukurto resurso kelias",
+                "schema": {
+                  "type": "string"
+                },
+                "example": "/api/quarries/1/offers/1/orders/1"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quarries/{quarry_id}/offers/{offer_id}/orders/{order_id}": {
+      "get": {
+        "summary": "Read Order",
+        "operationId": "read_order_api_quarries__quarry_id__offers__offer_id__orders__order_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          },
+          {
+            "name": "offer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Offer Id"
+            }
+          },
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "customerName": "Jonas Jonaitis",
+                  "email": "jonas@example.com",
+                  "phone": "+37060000222",
+                  "deliveryAddress": "Pavyzdžio g. 15, Kaunas",
+                  "quantityTonnes": 2,
+                  "willBeHome": false,
+                  "unloadingInstructions": "Išpilti prie vartų dešinėje.",
+                  "paymentMethod": "cash",
+                  "status": "pending",
+                  "id": 1,
+                  "offerId": 1,
+                  "ownerId": 2,
+                  "driverId": null,
+                  "unitPriceEur": 15.5,
+                  "materialTotalEur": 31.0,
+                  "createdAt": "2026-10-10T10:00:00Z",
+                  "updatedAt": "2026-10-10T10:00:00Z",
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "GET"
+                    },
+                    "update": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "PUT"
+                    },
+                    "delete": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "DELETE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Order",
+        "operationId": "update_order_api_quarries__quarry_id__offers__offer_id__orders__order_id__put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          },
+          {
+            "name": "offer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Offer Id"
+            }
+          },
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderBody"
+              },
+              "examples": {
+                "pavyzdys": {
+                  "summary": "Galiojanti užklausa",
+                  "value": {
+                    "customerName": "Jonas Jonaitis",
+                    "email": "jonas@example.com",
+                    "phone": "+37060000222",
+                    "deliveryAddress": "Pavyzdžio g. 15, Kaunas",
+                    "quantityTonnes": 2,
+                    "willBeHome": false,
+                    "unloadingInstructions": "Išpilti prie vartų dešinėje.",
+                    "paymentMethod": "cash",
+                    "status": "pending"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "customerName": "Jonas Jonaitis",
+                  "email": "jonas@example.com",
+                  "phone": "+37060000222",
+                  "deliveryAddress": "Pavyzdžio g. 15, Kaunas",
+                  "quantityTonnes": 2,
+                  "willBeHome": false,
+                  "unloadingInstructions": "Išpilti prie vartų dešinėje.",
+                  "paymentMethod": "cash",
+                  "status": "pending",
+                  "id": 1,
+                  "offerId": 1,
+                  "ownerId": 2,
+                  "driverId": null,
+                  "unitPriceEur": 15.5,
+                  "materialTotalEur": 31.0,
+                  "createdAt": "2026-10-10T10:00:00Z",
+                  "updatedAt": "2026-10-10T10:00:00Z",
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "GET"
+                    },
+                    "update": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "PUT"
+                    },
+                    "delete": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "DELETE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Order",
+        "operationId": "delete_order_api_quarries__quarry_id__offers__offer_id__orders__order_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          },
+          {
+            "name": "offer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Offer Id"
+            }
+          },
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quarries/{quarry_id}/offers/{offer_id}/orders/{order_id}/status": {
+      "patch": {
+        "summary": "Order Status",
+        "operationId": "order_status_api_quarries__quarry_id__offers__offer_id__orders__order_id__status_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          },
+          {
+            "name": "offer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Offer Id"
+            }
+          },
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusBody"
+              },
+              "examples": {
+                "pavyzdys": {
+                  "summary": "Galiojanti užklausa",
+                  "value": {
+                    "status": "confirmed"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "customerName": "Jonas Jonaitis",
+                  "email": "jonas@example.com",
+                  "phone": "+37060000222",
+                  "deliveryAddress": "Pavyzdžio g. 15, Kaunas",
+                  "quantityTonnes": 2,
+                  "willBeHome": false,
+                  "unloadingInstructions": "Išpilti prie vartų dešinėje.",
+                  "paymentMethod": "cash",
+                  "status": "confirmed",
+                  "id": 1,
+                  "offerId": 1,
+                  "ownerId": 2,
+                  "driverId": null,
+                  "unitPriceEur": 15.5,
+                  "materialTotalEur": 31.0,
+                  "createdAt": "2026-10-10T10:00:00Z",
+                  "updatedAt": "2026-10-10T10:00:00Z",
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "GET"
+                    },
+                    "update": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "PUT"
+                    },
+                    "delete": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "DELETE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quarries/{quarry_id}/offers/{offer_id}/orders/{order_id}/driver": {
+      "patch": {
+        "summary": "Assign Driver",
+        "operationId": "assign_driver_api_quarries__quarry_id__offers__offer_id__orders__order_id__driver_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          },
+          {
+            "name": "offer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Offer Id"
+            }
+          },
+          {
+            "name": "quarry_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Quarry Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignBody"
+              },
+              "examples": {
+                "pavyzdys": {
+                  "summary": "Galiojanti užklausa",
+                  "value": {
+                    "driverId": 7
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "customerName": "Jonas Jonaitis",
+                  "email": "jonas@example.com",
+                  "phone": "+37060000222",
+                  "deliveryAddress": "Pavyzdžio g. 15, Kaunas",
+                  "quantityTonnes": 2,
+                  "willBeHome": false,
+                  "unloadingInstructions": "Išpilti prie vartų dešinėje.",
+                  "paymentMethod": "cash",
+                  "status": "pending",
+                  "id": 1,
+                  "offerId": 1,
+                  "ownerId": 2,
+                  "driverId": 7,
+                  "unitPriceEur": 15.5,
+                  "materialTotalEur": 31.0,
+                  "createdAt": "2026-10-10T10:00:00Z",
+                  "updatedAt": "2026-10-10T10:00:00Z",
+                  "_links": {
+                    "self": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "GET"
+                    },
+                    "update": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "PUT"
+                    },
+                    "delete": {
+                      "href": "/api/quarries/1/offers/1/orders/1",
+                      "method": "DELETE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/drivers": {
+      "get": {
+        "summary": "Drivers",
+        "operationId": "drivers_api_drivers_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "id": 7,
+                      "name": "Petras Petraitis"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/my/orders": {
+      "get": {
+        "summary": "My Orders",
+        "operationId": "my_orders_api_my_orders_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "customerName": "Jonas Jonaitis",
+                      "email": "jonas@example.com",
+                      "phone": "+37060000222",
+                      "deliveryAddress": "Pavyzdžio g. 15, Kaunas",
+                      "quantityTonnes": 2,
+                      "willBeHome": false,
+                      "unloadingInstructions": "Išpilti prie vartų dešinėje.",
+                      "paymentMethod": "cash",
+                      "status": "pending",
+                      "id": 1,
+                      "offerId": 1,
+                      "ownerId": 2,
+                      "driverId": null,
+                      "unitPriceEur": 15.5,
+                      "materialTotalEur": 31.0,
+                      "createdAt": "2026-10-10T10:00:00Z",
+                      "updatedAt": "2026-10-10T10:00:00Z",
+                      "_links": {
+                        "self": {
+                          "href": "/api/quarries/1/offers/1/orders/1",
+                          "method": "GET"
+                        },
+                        "update": {
+                          "href": "/api/quarries/1/offers/1/orders/1",
+                          "method": "PUT"
+                        },
+                        "delete": {
+                          "href": "/api/quarries/1/offers/1/orders/1",
+                          "method": "DELETE"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Register",
+        "operationId": "register_api_auth_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterBody"
+              },
+              "examples": {
+                "pavyzdys": {
+                  "summary": "Galiojanti užklausa",
+                  "value": {
+                    "name": "Jonas Jonaitis",
+                    "email": "jonas@example.com",
+                    "password": "Pavyzdinis-12345!"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "accessToken": "JWT_ACCESS_TOKEN",
+                  "tokenType": "bearer",
+                  "expiresIn": 900,
+                  "user": {
+                    "id": 2,
+                    "name": "Jonas Jonaitis",
+                    "email": "jonas@example.com",
+                    "role": "buyer"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Set-Cookie": {
+                "description": "Refresh žetonas; produkcijoje papildomai Secure",
+                "schema": {
+                  "type": "string"
+                },
+                "example": "refresh_token=OPAQUE_TOKEN; HttpOnly; SameSite=Strict; Path=/api/auth"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "EMAIL_EXISTS",
+                    "message": "Šis el. paštas jau užregistruotas."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login",
+        "operationId": "login_api_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginBody"
+              },
+              "examples": {
+                "pavyzdys": {
+                  "summary": "Galiojanti užklausa",
+                  "value": {
+                    "email": "jonas@example.com",
+                    "password": "Pavyzdinis-12345!"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "accessToken": "JWT_ACCESS_TOKEN",
+                  "tokenType": "bearer",
+                  "expiresIn": 900,
+                  "user": {
+                    "id": 2,
+                    "name": "Jonas Jonaitis",
+                    "email": "jonas@example.com",
+                    "role": "buyer"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Set-Cookie": {
+                "description": "Refresh žetonas; produkcijoje papildomai Secure",
+                "schema": {
+                  "type": "string"
+                },
+                "example": "refresh_token=OPAQUE_TOKEN; HttpOnly; SameSite=Strict; Path=/api/auth"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Neteisingas el. paštas arba slaptažodis."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Refresh Token",
+        "operationId": "refresh_token_api_auth_refresh_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "accessToken": "JWT_ACCESS_TOKEN",
+                  "tokenType": "bearer",
+                  "expiresIn": 900,
+                  "user": {
+                    "id": 2,
+                    "name": "Jonas Jonaitis",
+                    "email": "jonas@example.com",
+                    "role": "buyer"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Set-Cookie": {
+                "description": "Refresh žetonas; produkcijoje papildomai Secure",
+                "schema": {
+                  "type": "string"
+                },
+                "example": "refresh_token=OPAQUE_TOKEN; HttpOnly; SameSite=Strict; Path=/api/auth"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Nėra galiojančio refresh žetono.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijungimas nebegalioja."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "refresh_token",
+            "in": "cookie",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Prisijungimo metu gautas refresh žetonas."
+          }
+        ]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Logout",
+        "operationId": "logout_api_auth_logout_post",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Me",
+        "operationId": "me_api_auth_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 2,
+                  "name": "Jonas Jonaitis",
+                  "email": "jonas@example.com",
+                  "role": "buyer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/users": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "List Users",
+        "operationId": "list_users_api_auth_users_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": [
+                    {
+                      "id": 2,
+                      "name": "Jonas Jonaitis",
+                      "email": "jonas@example.com",
+                      "role": "buyer"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/users/{user_id}/role": {
+      "patch": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Change Role",
+        "operationId": "change_role_api_auth_users__user_id__role_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleBody"
+              },
+              "examples": {
+                "pavyzdys": {
+                  "summary": "Galiojanti užklausa",
+                  "value": {
+                    "role": "quarry"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 2,
+                  "name": "Jonas Jonaitis",
+                  "email": "jonas@example.com",
+                  "role": "quarry"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The resource does not exist within this parent.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The resource does not exist within this parent."
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The operation conflicts with related or existing records. Delete child records first.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "CONFLICT",
+                    "message": "The operation conflicts with related or existing records. Delete child records first."
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Prisijunkite prie paskyros.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Prisijunkite prie paskyros."
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Šiam veiksmui neturite teisių.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "FORBIDDEN",
+                    "message": "Šiam veiksmui neturite teisių."
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Maximum JSON body size is 32 KB.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "BODY_TOO_LARGE",
+                    "message": "Maximum JSON body size is 32 KB."
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Send the body as application/json.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Send the body as application/json."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "ok",
+                  "database": "connected"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request data."
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "503": {
+            "description": "Database is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": {
+                    "code": "DATABASE_UNAVAILABLE",
+                    "message": "Database is temporarily unavailable."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AssignBody": {
+        "properties": {
+          "driverId": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Driverid"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "driverId"
+        ],
+        "title": "AssignBody",
+        "examples": [
+          {
+            "driverId": 7
+          }
+        ]
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "LoginBody": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Password"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "LoginBody",
+        "examples": [
+          {
+            "email": "jonas@example.com",
+            "password": "Pavyzdinis-12345!"
+          }
+        ]
+      },
+      "OfferBody": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "materialType": {
+            "type": "string",
+            "enum": [
+              "gravel",
+              "sand",
+              "crushed_stone"
+            ],
+            "title": "Materialtype"
+          },
+          "fraction": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Fraction"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 5,
+            "title": "Description"
+          },
+          "pricePerTonneEur": {
+            "anyOf": [
+              {
+                "type": "number",
+                "multipleOf": 0.01,
+                "maximum": 999999.99,
+                "minimum": 0.01
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Pricepertonneeur"
+          },
+          "available": {
+            "type": "boolean",
+            "title": "Available"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "materialType",
+          "fraction",
+          "description",
+          "pricePerTonneEur",
+          "available"
+        ],
+        "title": "OfferBody",
+        "examples": [
+          {
+            "name": "Plautas smėlis",
+            "materialType": "sand",
+            "fraction": "0-2 mm",
+            "description": "Smėlis aplinkos tvarkymo darbams.",
+            "pricePerTonneEur": 15.5,
+            "available": true
+          }
+        ]
+      },
+      "OrderBody": {
+        "properties": {
+          "customerName": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 2,
+            "title": "Customername"
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "title": "Email"
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^\\+[1-9]\\d{7,14}$",
+            "title": "Phone"
+          },
+          "deliveryAddress": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 5,
+            "title": "Deliveryaddress"
+          },
+          "quantityTonnes": {
+            "anyOf": [
+              {
+                "type": "number",
+                "multipleOf": 0.001,
+                "maximum": 1000.0,
+                "minimum": 0.001
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Quantitytonnes"
+          },
+          "willBeHome": {
+            "type": "boolean",
+            "title": "Willbehome"
+          },
+          "unloadingInstructions": {
+            "type": "string",
+            "maxLength": 1000,
+            "title": "Unloadinginstructions"
+          },
+          "paymentMethod": {
+            "type": "string",
+            "enum": [
+              "card",
+              "cash"
+            ],
+            "title": "Paymentmethod"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "confirmed",
+              "delivered",
+              "cancelled"
+            ],
+            "title": "Status"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "customerName",
+          "email",
+          "phone",
+          "deliveryAddress",
+          "quantityTonnes",
+          "willBeHome",
+          "unloadingInstructions",
+          "paymentMethod",
+          "status"
+        ],
+        "title": "OrderBody",
+        "examples": [
+          {
+            "customerName": "Jonas Jonaitis",
+            "email": "jonas@example.com",
+            "phone": "+37060000222",
+            "deliveryAddress": "Pavyzdžio g. 15, Kaunas",
+            "quantityTonnes": 2,
+            "willBeHome": false,
+            "unloadingInstructions": "Išpilti prie vartų dešinėje.",
+            "paymentMethod": "cash",
+            "status": "pending"
+          }
+        ]
+      },
+      "QuarryBody": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 2,
+            "title": "City"
+          },
+          "address": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 5,
+            "title": "Address"
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^\\+[1-9]\\d{7,14}$",
+            "title": "Phone"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 5,
+            "title": "Description"
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 90.0,
+                "minimum": -90.0
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 180.0,
+                "minimum": -180.0
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Longitude"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "city",
+          "address",
+          "phone",
+          "description",
+          "latitude",
+          "longitude"
+        ],
+        "title": "QuarryBody",
+        "examples": [
+          {
+            "name": "Kauno žvyro karjeras",
+            "city": "Kaunas",
+            "address": "Pavyzdžio g. 10, Kauno r.",
+            "phone": "+37060000111",
+            "description": "Žvyras ir smėlis aplinkos tvarkymui.",
+            "latitude": 54.9,
+            "longitude": 23.9
+          }
+        ]
+      },
+      "QuarryPatchBody": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 2
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80,
+                "minLength": 2
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "address": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 5
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\+[1-9]\\d{7,14}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000,
+                "minLength": 5
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+                  }
+                ],
+                "ge": -90,
+                "le": 90
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+                  }
+                ],
+                "ge": -180,
+                "le": 180
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "QuarryPatchBody",
+        "description": "Allow omitted fields, but reject explicit nulls and empty updates.",
+        "examples": [
+          {
+            "name": "Atnaujintas karjero pavadinimas"
+          }
+        ]
+      },
+      "RegisterBody": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 10,
+            "title": "Password"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
+        "title": "RegisterBody",
+        "examples": [
+          {
+            "name": "Jonas Jonaitis",
+            "email": "jonas@example.com",
+            "password": "Pavyzdinis-12345!"
+          }
+        ]
+      },
+      "RoleBody": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "buyer",
+              "quarry",
+              "driver",
+              "admin"
+            ],
+            "title": "Role"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "role"
+        ],
+        "title": "RoleBody",
+        "examples": [
+          {
+            "role": "quarry"
+          }
+        ]
+      },
+      "StatusBody": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "confirmed",
+              "delivered",
+              "cancelled"
+            ],
+            "title": "Status"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "StatusBody",
+        "examples": [
+          {
+            "status": "confirmed"
+          }
+        ]
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Vietinė Docker aplinka"
+    }
+  ]
+}

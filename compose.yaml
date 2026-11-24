@@ -1,0 +1,20 @@
+name: noriuzvyro-lab1
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: noriuzvyro
+      POSTGRES_PASSWORD: local_lab1_password
+      POSTGRES_DB: noriuzvyro
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - noriuzvyro_lab1_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U noriuzvyro -d noriuzvyro"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+volumes:
+  noriuzvyro_lab1_data:

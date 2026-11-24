@@ -1,0 +1,1626 @@
+{
+  "info": {
+    "name": "Noriuzvyro — Lab1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Lab1 CRUD and PATCH with Lab2 authentication. Set adminEmail and adminPassword in the Local environment before running. Use a local test administrator account."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "00 — Authentication",
+      "item": [
+        {
+          "name": "Log in as administrator",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "noauth"
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "if (pm.response.code === 200) pm.environment.set('accessToken', pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "01 — Health and sample data",
+      "item": [
+        {
+          "name": "Check API and database health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "API root and links",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List quarries — pagination",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries?page=1&pageSize=2"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Bent 5 demonstraciniai karjerai', () => pm.expect(result.meta.total).to.be.at.least(5));",
+                  "pm.test('Two records per page', () => pm.expect(result.data).to.have.length(2));",
+                  "pm.collectionVariables.set('demoQuarryId', result.data[0].id);",
+                  "pm.test('Hypermedia', () => pm.expect(result._links.next.href).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Filter quarries by city",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries?city=Kaunas&page=1&pageSize=5"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Tik Kaunas', () => result.data.forEach(q => pm.expect(q.city).to.eql('Kaunas')));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List quarry offers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{demoQuarryId}}/offers?pageSize=5"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Offers are available', () => pm.expect(result.data.length).to.be.above(0));",
+                  "pm.collectionVariables.set('demoOfferId', result.data[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Three-level resource hierarchy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{demoQuarryId}}/offers/{{demoOfferId}}/orders?pageSize=5"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Quarry summary — multiple entities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{demoQuarryId}}/summary"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Quarry with aggregated offers and orders', () => { pm.expect(result.quarry.id).to.be.a('number'); pm.expect(result.statistics.offerCount).to.be.a('number'); pm.expect(result.statistics.orderCount).to.be.a('number'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 — Create and update test records",
+      "item": [
+        {
+          "name": "CREATE quarry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman karjeras\",\n  \"city\": \"Postman miestas\",\n  \"address\": \"Bandymų g. 10, Kaunas\",\n  \"phone\": \"+37060000901\",\n  \"description\": \"Laikinas karjeras Postman scenarijui.\",\n  \"latitude\": 54.9,\n  \"longitude\": 23.9\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.collectionVariables.set('quarryId', result.id);",
+                  "pm.test('Location ir self sutampa', () => pm.expect(pm.response.headers.get('Location')).to.eql(result._links.self.href));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "CREATE another quarry for scope checks",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kitas Postman karjeras\",\n  \"city\": \"Postman miestas\",\n  \"address\": \"Bandymų g. 10, Kaunas\",\n  \"phone\": \"+37060000901\",\n  \"description\": \"Laikinas karjeras Postman scenarijui.\",\n  \"latitude\": 54.9,\n  \"longitude\": 23.9\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.collectionVariables.set('otherQuarryId', result.id);",
+                  "pm.test('Location ir self sutampa', () => pm.expect(pm.response.headers.get('Location')).to.eql(result._links.self.href));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "READ quarry",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "UPDATE quarry — full PUT",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman karjeras\",\n  \"city\": \"Postman miestas\",\n  \"address\": \"Bandymų g. 10, Kaunas\",\n  \"phone\": \"+37060000901\",\n  \"description\": \"Atnaujintas karjero aprašymas.\",\n  \"latitude\": 54.9,\n  \"longitude\": 23.9\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PATCH quarry — description only",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Pakeistas tik karjero aprašymas.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Description updated', () => pm.expect(pm.response.json().description).to.eql('Pakeistas tik karjero aprašymas.'));",
+                  "pm.test('PATCH nuoroda', () => pm.expect(pm.response.json()._links.patch.method).to.eql('PATCH'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "CREATE offer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman smėlis\",\n  \"materialType\": \"sand\",\n  \"fraction\": \"0-2 mm\",\n  \"description\": \"Sijotas smėlis demonstraciniam užsakymui.\",\n  \"pricePerTonneEur\": 12.35,\n  \"available\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.collectionVariables.set('offerId', result.id);",
+                  "pm.test('Location ir self sutampa', () => pm.expect(pm.response.headers.get('Location')).to.eql(result._links.self.href));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "READ offer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "UPDATE offer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman smėlis\",\n  \"materialType\": \"sand\",\n  \"fraction\": \"0-2 mm\",\n  \"description\": \"Atnaujintas smėlio aprašymas.\",\n  \"pricePerTonneEur\": 12.35,\n  \"available\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "LIST offers with filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers?materialType=sand&available=true&minPrice=12&maxPrice=13&pageSize=1"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('One matching offer', () => pm.expect(result.meta.total).to.eql(1));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "CREATE order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}/orders",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Postman Pirkėjas\",\n  \"email\": \"postman@example.com\",\n  \"phone\": \"+37060000902\",\n  \"deliveryAddress\": \"Bandymų g. 20, Kaunas\",\n  \"quantityTonnes\": 2.5,\n  \"willBeHome\": false,\n  \"unloadingInstructions\": \"Išpilti pažymėtoje vietoje prie vartų.\",\n  \"paymentMethod\": \"cash\",\n  \"status\": \"pending\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.collectionVariables.set('orderId', result.id);",
+                  "pm.test('Location ir self sutampa', () => pm.expect(pm.response.headers.get('Location')).to.eql(result._links.self.href));",
+                  "pm.test('Total calculated by the server', () => pm.expect(result.materialTotalEur).to.eql(30.88));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "READ order",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}/orders/{{orderId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "UPDATE offer price after order creation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman smėlis\",\n  \"materialType\": \"sand\",\n  \"fraction\": \"0-2 mm\",\n  \"description\": \"Sijotas smėlis demonstraciniam užsakymui.\",\n  \"pricePerTonneEur\": 20,\n  \"available\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "UPDATE order quantity and status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}/orders/{{orderId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Postman Pirkėjas\",\n  \"email\": \"postman@example.com\",\n  \"phone\": \"+37060000902\",\n  \"deliveryAddress\": \"Bandymų g. 20, Kaunas\",\n  \"quantityTonnes\": 3,\n  \"willBeHome\": false,\n  \"unloadingInstructions\": \"Išpilti pažymėtoje vietoje prie vartų.\",\n  \"paymentMethod\": \"cash\",\n  \"status\": \"confirmed\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Original order price preserved', () => pm.expect(result.unitPriceEur).to.eql(12.35));",
+                  "pm.test('Total recalculated', () => pm.expect(result.materialTotalEur).to.eql(37.05));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "LIST orders with filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}/orders?status=confirmed&paymentMethod=cash&pageSize=1"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('One confirmed order', () => pm.expect(result.meta.total).to.eql(1));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Summary after CRUD",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/summary"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Summary totals', () => { pm.expect(result.statistics.orderCount).to.eql(1); pm.expect(result.statistics.activeMaterialTotalEur).to.eql(37.05); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03 — Errors and hierarchy protection",
+      "item": [
+        {
+          "name": "404 quarry does not exist",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/2147483647"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "404 offer belongs to another quarry",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{otherQuarryId}}/offers/{{offerId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "404 orders requested through the wrong quarry",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{otherQuarryId}}/offers/{{offerId}}/orders"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "404 cannot update an offer through the wrong hierarchy",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{otherQuarryId}}/offers/{{offerId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman smėlis\",\n  \"materialType\": \"sand\",\n  \"fraction\": \"0-2 mm\",\n  \"description\": \"Sijotas smėlis demonstraciniam užsakymui.\",\n  \"pricePerTonneEur\": 12.35,\n  \"available\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "404 cannot delete an offer through the wrong hierarchy",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{otherQuarryId}}/offers/{{offerId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "400 invalid ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/abc"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "400 page number is zero",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries?page=0"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "400 page size exceeds the limit",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries?pageSize=101"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "400 unknown filter",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries?sort=bad"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "400 invalid price range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers?minPrice=20&maxPrice=10"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "400 missing quarry fields",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nepilnas\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "400 negative price",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman smėlis\",\n  \"materialType\": \"sand\",\n  \"fraction\": \"0-2 mm\",\n  \"description\": \"Sijotas smėlis demonstraciniam užsakymui.\",\n  \"pricePerTonneEur\": -1,\n  \"available\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "400 invalid email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}/orders",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Postman Pirkėjas\",\n  \"email\": \"wrong\",\n  \"phone\": \"+37060000902\",\n  \"deliveryAddress\": \"Bandymų g. 20, Kaunas\",\n  \"quantityTonnes\": 2.5,\n  \"willBeHome\": false,\n  \"unloadingInstructions\": \"Išpilti pažymėtoje vietoje prie vartų.\",\n  \"paymentMethod\": \"cash\",\n  \"status\": \"pending\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "400 quantity is zero",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}/orders",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Postman Pirkėjas\",\n  \"email\": \"postman@example.com\",\n  \"phone\": \"+37060000902\",\n  \"deliveryAddress\": \"Bandymų g. 20, Kaunas\",\n  \"quantityTonnes\": 0,\n  \"willBeHome\": false,\n  \"unloadingInstructions\": \"Išpilti pažymėtoje vietoje prie vartų.\",\n  \"paymentMethod\": \"cash\",\n  \"status\": \"pending\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "400 missing unloading instructions",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}/orders",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Postman Pirkėjas\",\n  \"email\": \"postman@example.com\",\n  \"phone\": \"+37060000902\",\n  \"deliveryAddress\": \"Bandymų g. 20, Kaunas\",\n  \"quantityTonnes\": 2.5,\n  \"willBeHome\": false,\n  \"unloadingInstructions\": \"\",\n  \"paymentMethod\": \"cash\",\n  \"status\": \"pending\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "400 cannot set the order price manually",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}/orders",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Postman Pirkėjas\",\n  \"email\": \"postman@example.com\",\n  \"phone\": \"+37060000902\",\n  \"deliveryAddress\": \"Bandymų g. 20, Kaunas\",\n  \"quantityTonnes\": 2.5,\n  \"willBeHome\": false,\n  \"unloadingInstructions\": \"Išpilti pažymėtoje vietoje prie vartų.\",\n  \"paymentMethod\": \"cash\",\n  \"status\": \"pending\",\n  \"unitPriceEur\": 0.01\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "400 malformed JSON",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries",
+            "body": {
+              "mode": "raw",
+              "raw": "{broken",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "415 unsupported Content-Type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries",
+            "body": {
+              "mode": "raw",
+              "raw": "text",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 415', () => pm.response.to.have.status(415));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "405 unsupported method",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 405', () => pm.response.to.have.status(405));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "409 quarry has offers",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 409', () => pm.response.to.have.status(409));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "409 offer has orders",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 409', () => pm.response.to.have.status(409));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "UPDATE mark offer unavailable",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman smėlis\",\n  \"materialType\": \"sand\",\n  \"fraction\": \"0-2 mm\",\n  \"description\": \"Sijotas smėlis demonstraciniam užsakymui.\",\n  \"pricePerTonneEur\": 12.35,\n  \"available\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "409 cannot order unavailable material",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}/orders",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"Postman Pirkėjas\",\n  \"email\": \"postman@example.com\",\n  \"phone\": \"+37060000902\",\n  \"deliveryAddress\": \"Bandymų g. 20, Kaunas\",\n  \"quantityTonnes\": 2.5,\n  \"willBeHome\": false,\n  \"unloadingInstructions\": \"Išpilti pažymėtoje vietoje prie vartų.\",\n  \"paymentMethod\": \"cash\",\n  \"status\": \"pending\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 409', () => pm.response.to.have.status(409));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "UPDATE mark offer available again",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman smėlis\",\n  \"materialType\": \"sand\",\n  \"fraction\": \"0-2 mm\",\n  \"description\": \"Sijotas smėlis demonstraciniam užsakymui.\",\n  \"pricePerTonneEur\": 12.35,\n  \"available\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "SQL-like input is treated as text",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries?city=%27%20OR%201%3D1%20--"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Filtras neapeitas', () => pm.expect(result.meta.total).to.eql(0));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 — DELETE and verify removal",
+      "item": [
+        {
+          "name": "DELETE order",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}/orders/{{orderId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 204', () => pm.response.to.have.status(204));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('204 be turinio', () => pm.expect(pm.response.text()).to.eql(''));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "404 deleted order",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}/orders/{{orderId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE offer",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 204', () => pm.response.to.have.status(204));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('204 be turinio', () => pm.expect(pm.response.text()).to.eql(''));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "404 deleted offer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}/offers/{{offerId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE quarry",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 204', () => pm.response.to.have.status(204));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('204 be turinio', () => pm.expect(pm.response.text()).to.eql(''));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "404 deleted quarry",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{quarryId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('JSON atsakymas', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+                  "const result = pm.response.json();",
+                  "pm.test('Structured error', () => pm.expect(result.error.code).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE second test quarry",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/quarries/{{otherQuarryId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 204', () => pm.response.to.have.status(204));",
+                  "pm.test('Does not return 500', () => pm.expect(pm.response.code).not.to.eql(500));",
+                  "pm.test('204 be turinio', () => pm.expect(pm.response.text()).to.eql(''));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  }
+}

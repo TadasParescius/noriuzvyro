@@ -1,0 +1,327 @@
+{
+  "info": {
+    "name": "Noriuzvyro — Ownership Demo",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Select No Environment. Enter quarryAPassword and quarryBPassword locally in collection Variables. Accounts: kar1@gmail.com and kar2@gmail.com. Send requests 01–06 in order. Tokens and the quarry ID are saved automatically. Set quarryName to the exact name of a quarry created by kar1@gmail.com. Request 04 must return 403; request 05 demonstrates a permitted owner update. No records are deleted."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "quarryAEmail",
+      "value": "kar1@gmail.com"
+    },
+    {
+      "key": "quarryBEmail",
+      "value": "kar2@gmail.com"
+    },
+    {
+      "key": "quarryName",
+      "value": "Karj1"
+    },
+    {
+      "key": "ownerAccessToken",
+      "value": ""
+    },
+    {
+      "key": "otherAccessToken",
+      "value": ""
+    },
+    {
+      "key": "ownerUserId",
+      "value": ""
+    },
+    {
+      "key": "quarryId",
+      "value": ""
+    },
+    {
+      "key": "quarryAPassword",
+      "value": ""
+    },
+    {
+      "key": "quarryBPassword",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "01 — Log in as Quarry A",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/auth/login",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{quarryAEmail}}\",\n  \"password\": \"{{quarryAPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) {",
+              "  const data = pm.response.json();",
+              "  pm.collectionVariables.set('ownerAccessToken', data.accessToken);",
+              "  pm.collectionVariables.set('ownerUserId', String(data.user.id));",
+              "  pm.collectionVariables.unset('quarryId');",
+              "  pm.test('A has the quarry role', () => pm.expect(data.user.role).to.eql('quarry'));",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 — Find the quarry owned by A",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/quarries?search={{quarryName}}&pageSize=100",
+        "header": [],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{ownerAccessToken}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.collectionVariables.unset('quarryId');",
+              "if (pm.response.code === 200) {",
+              "  const matches = pm.response.json().data.filter(q => q.name === pm.collectionVariables.get('quarryName') && String(q.ownerId) === pm.collectionVariables.get('ownerUserId'));",
+              "  pm.test('Exactly one matching quarry belongs to A', () => pm.expect(matches.length).to.eql(1));",
+              "  if (matches.length === 1) pm.collectionVariables.set('quarryId', String(matches[0].id));",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 — Log in as Quarry B",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/auth/login",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "noauth"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{quarryBEmail}}\",\n  \"password\": \"{{quarryBPassword}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) {",
+              "  const data = pm.response.json();",
+              "  pm.collectionVariables.set('otherAccessToken', data.accessToken);",
+              "  pm.test('B has the same role but a different ID', () => {",
+              "    pm.expect(data.user.role).to.eql('quarry');",
+              "    pm.expect(String(data.user.id)).not.to.eql(pm.collectionVariables.get('ownerUserId'));",
+              "  });",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 — B cannot update the quarry owned by A — 403",
+      "request": {
+        "method": "PATCH",
+        "url": "{{baseUrl}}/api/quarries/{{quarryId}}",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{otherAccessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"description\": \"This change must not be saved by Quarry B.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!/^[1-9][0-9]*$/.test(String(pm.collectionVariables.get('quarryId') || ''))) {",
+              "  pm.execution.skipRequest();",
+              "  throw new Error('Run requests 01 and 02 first to select the exact quarry owned by A.');",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 403', () => pm.response.to.have.status(403));",
+              "if (pm.response.code === 403) pm.test('Ownership protection returned FORBIDDEN', () => pm.expect(pm.response.json().error.code).to.eql('FORBIDDEN'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 — A can update their own quarry — 200",
+      "request": {
+        "method": "PATCH",
+        "url": "{{baseUrl}}/api/quarries/{{quarryId}}",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{ownerAccessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"description\": \"Žvyro ir smėlio karjeras.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!/^[1-9][0-9]*$/.test(String(pm.collectionVariables.get('quarryId') || ''))) {",
+              "  pm.execution.skipRequest();",
+              "  throw new Error('Run requests 01 and 02 first to select the exact quarry owned by A.');",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) pm.test('The updated record is still owned by A', () => pm.expect(String(pm.response.json().ownerId)).to.eql(pm.collectionVariables.get('ownerUserId')));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 — Read the quarry after the ownership checks",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/quarries/{{quarryId}}",
+        "header": [],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{ownerAccessToken}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!/^[1-9][0-9]*$/.test(String(pm.collectionVariables.get('quarryId') || ''))) {",
+              "  pm.execution.skipRequest();",
+              "  throw new Error('Run requests 01 and 02 first to select the exact quarry owned by A.');",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+              "if (pm.response.code === 200) pm.test('The owner description is preserved', () => pm.expect(pm.response.json().description).to.eql('Žvyro ir smėlio karjeras.'));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
